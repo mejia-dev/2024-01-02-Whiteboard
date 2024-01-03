@@ -1,0 +1,69 @@
+Write an algorithm that takes a string with repeated characters and compresses them, using a number to show how many times the repeated character has been compressed. For instance, aaa would be written as 3a. Solve the problem with and without recursion.
+
+Example
+Input: "aaabccdddda"
+Output: "3ab2c4da"
+
+
+function compressNoRecurse(inputString) {
+  let compressedChars = [];
+  let inputArray = inputString.split("");
+  inputArray.forEach((character, index) => {
+
+    // if the character before current character is not character, add it to the compressed Array.
+
+    if (inputArray[index -1] !== character) {
+      compressedChars.push(character);
+    }
+
+    // if the character before current character is the same character
+      // If it does have a number, get the value of that number, add 1 to that number, then splice into array.
+      // else -- it does not have a number. Add a number (2), then splice into array.
+
+    if (inputArray[index -1] === character) {
+      const lastCharacter = compressedChars.at(-1);
+      if (lastCharacter.length === 2) {
+        const newTotal = parseInt(lastCharacter[0]) + 1;
+        compressedChars.splice(-1, 1, newTotal + lastCharacter[1]);
+      } else {
+        compressedChars.splice(-1, 1, 2 + character);
+      }
+    }
+  });
+  return compressedChars.join("");
+}
+
+
+function compressWithRecurse(inputString, index = 0, resultString = "") {
+  const inputArray = inputString.split("");
+
+  // base case
+  if (index === inputString.length) {
+    return resultString;
+  } else {
+  // if a matching letter exists after AND NOT before
+    // add set of letters based on a for loop iterating through all matches
+    // start 
+  // if a matching letter exists before
+    // ignore
+  // if matching letter does not exist
+    // add letter
+
+    let newResultString;
+    if (( inputArray[index] === inputArray[index + 1]) && (inputArray[index] !== inputArray[index -1])) {
+      let count = 1;
+      for (let i = index + 1; i < inputArray.length && inputArray[i] === inputArray[index]; i++) {
+        count++;
+      }
+      newResultString = resultString + count + inputArray[index];
+      compressWithRecurse(inputString, index + count, newResultString);
+    } else if (inputArray[index] === inputArray[index -1]) {
+      newResultString = resultString;
+      compressWithRecurse(inputString, index + 1, newResultString);
+    } else {
+      newResultString = resultString + inputArray[index];
+      compressWithRecurse(inputString, index + 1, newResultString);
+    }
+
+  }
+}
